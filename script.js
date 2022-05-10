@@ -1,79 +1,99 @@
-$(document).ready(function(){
-	
-	// Scrollspy initiation
-	$('body').scrollspy({ 
-		target: '#scroll-spy',
-		offset: 70
-	});
+let burger = document.getElementById("burger");
+let overlay = document.querySelector("section");
+let heroImage = document.querySelector(".hero-image");
+let showMenu = false;
+let del = 1;
+let i = 1;
 
-	// On render, adjust body padding to ensure last Scroll target can reach top of screen
-	var height = $('#howto').innerHeight();
-	var windowHeight = $(window).height();
-	var navHeight = $('nav.navbar').innerHeight();
-	var siblingHeight = $('#howto').nextAll().innerHeight();
-
-
-	if(height < windowHeight){
-		$('body').css("padding-bottom", windowHeight-navHeight-height-siblingHeight + "px");
-	}
-
-	// On window resize, adjust body padding to ensure last Scroll target can reach top of screen
-	$(window).resize(function(event){
-		var height = $('#howto').innerHeight();
-		var windowHeight = $(window).height();
-		var navHeight = $('nav.navbar').innerHeight();
-		var siblingHeight = $('#howto').nextAll().innerHeight();
-		
-		
-		if(height < windowHeight){
-			$('body').css("padding-bottom", windowHeight-navHeight-height-siblingHeight + "px");
-		}
-	});
-	
-	$('nav.navbar a, .scrollTop').click(function(event){
-		// Make sure this.hash has a value before overriding default behavior
-		if (this.hash !== "") {
-			// Prevent default anchor click behavior
-			event.preventDefault();
-
-			// Store hash (#)
-			var hash = this.hash;
-			
-			// Ensure no section has relevant class
-			$('section').removeClass("focus");
-
-			// Add class to target
-			$(hash).addClass("focus");
-
-			// Remove thy class after timeout
-			setTimeout(function(){
-				$(hash).removeClass("focus");
-			}, 2000);			
-			
-    // Using jQuery's animate() method to add smooth page scroll
-    // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area (the speed of the animation)
-			$('html, body').animate({
-				scrollTop: $(hash).offset().top - 69
-			}, 600, function(){
-				
-				// Add hash (#) to URL when done scrolling (default click behavior)
-				window.location.hash = hash;				
-			});
-					
-			// Collapse Navbar for mobile view
-			$(".navbar-collapse").collapse('hide');			
-		}
-
-	});
-	$(window).scroll(function(){
-		var scrollPos = $('body').scrollTop();
-		if(scrollPos > 0){
-			$('.navbar').addClass('show-color');
-			$('.scrollTop').addClass('show-button');
-		} else{
-			$('.navbar').removeClass('show-color');
-			$('.scrollTop').removeClass('show-button');
-		}
-		
-	});
+let tl = gsap.timeline({
+  repeat: -1,
+  yoyo: true,
+  ease: "expo.out"
 });
+
+overlay.style.display = "none";
+
+burger.addEventListener("click", (e) => {
+  showMenu = !showMenu;
+  if (showMenu) {
+    burger.classList.add("active");
+    overlay.style.display = "block";
+    gsap.to(overlay, 1, {
+      clipPath: "polygon(0% 0%, 100% 0, 100% 100%, 0% 100%)",
+      ease: "expo.in"
+    });
+  } else {
+    burger.classList.remove("active");
+    gsap.to(overlay, 1, {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+      ease: "expo.out",
+      onComplete: () => (overlay.style.display = "none")
+    });
+  }
+});
+
+gsap.set(["#hero-1 h2, #hero-1 h1, #hero-1 h3"], {
+  clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+});
+
+gsap.set(
+  [
+    `#hero-2 h2, #hero-3 h2, #hero-4 h2, #hero-5 h2, #hero-6 h2, #hero-7 h2, #hero-8 h2, #hero-9 h2, #hero-10 h2, 
+     #hero-2 h1, #hero-3 h1, #hero-4 h1, #hero-5 h1, #hero-6 h1, #hero-7 h1, #hero-8 h1, #hero-9 h1, #hero-10 h1, 
+     #hero-2 h3, #hero-3 h3, #hero-4 h3, #hero-5 h3, #hero-6 h3, #hero-7 h3, #hero-8 h3, #hero-9 h3, #hero-10 h3`
+  ],
+  {
+    clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)"
+  }
+);
+
+while (i < 10) {
+  tl.to(`#hero-${i} h2`, 1.1, {
+    clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
+    delay: del
+  })
+    .to(
+      `#hero-${i} h1`,
+      0.9,
+      {
+        clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)"
+      },
+      "-=0.3"
+    )
+    .to(
+      `#hero-${i} h3`,
+      0.9,
+      {
+        clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)"
+      },
+      "-=0.3"
+    )
+    .to(
+      `#hero-${i} .hi-${i}`,
+      0.7,
+      {
+        clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)"
+      },
+      "-=1"
+    )
+    .to(`#hero-${i + 1} h2`, 0.9, {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+    })
+    .to(
+      `#hero-${i + 1} h1`,
+      0.9,
+      {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+      },
+      "-=0.3"
+    )
+    .to(
+      `#hero-${i + 1} h3`,
+      0.9,
+      {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+      },
+      "-=0.3"
+    );
+  i++;
+}
